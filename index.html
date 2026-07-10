@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LodgeNest | Premium Lodge & Room Booking</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container navbar">
+            <a href="#" class="logo" onclick="navigateTo('home-view')">
+                <i class="fa-solid fa-hotel"></i> LodgeNest
+            </a>
+            
+            <nav class="nav-menu" id="nav-menu">
+                <a href="#" class="nav-link active" onclick="navigateTo('home-view')">Home</a>
+                <a href="#" class="nav-link" onclick="navigateTo('lodges-view')">Explore Lodges</a>
+                <a href="#" class="nav-link" onclick="navigateTo('about-view')">About Us</a>
+                <a href="#" class="nav-link" onclick="navigateTo('contact-view')">Contact Us</a>
+                <a href="#" class="nav-link user-only hidden" id="nav-dashboard" onclick="navigateTo('dashboard-view')">My Bookings</a>
+            </nav>
+
+            <div class="nav-actions">
+                <span id="user-welcome" class="user-welcome hidden"></span>
+                <button class="btn btn-primary" id="auth-btn" onclick="openAuthModal()">Login / Register</button>
+            </div>
+
+            <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        
+        <!-- 1. HOME VIEW -->
+        <section id="home-view" class="view-section">
+            <!-- Hero Section -->
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Find Your Ideal Lodge & Stay Cozy</h1>
+                    <p>Discover handpicked premium lodges, cabins, and suites at unbeatable prices.</p>
+                    
+                    <!-- Search Bar -->
+                    <div class="hero-search">
+                        <div class="search-input-group">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" id="hero-search-input" placeholder="Where do you want to go? (e.g., Manali, Goa)">
+                        </div>
+                        <button class="btn btn-secondary" onclick="executeHeroSearch()">Search Lodges</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Info Section -->
+            <div class="container features-section">
+                <div class="section-header">
+                    <h2>Why Book With Us?</h2>
+                    <p>We provide standard premium features in all our partners' lodges.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <h3>Safe & Secured</h3>
+                        <p>All verified properties maintaining top-tier security standards.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-tags"></i>
+                        <h3>Best Rates</h3>
+                        <p>No hidden booking fees. Guaranteed best price for rooms.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-headset"></i>
+                        <h3>24/7 Support</h3>
+                        <p>Our helpdesk is always active to assist during your stay.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Lodges -->
+            <div class="container featured-section">
+                <div class="section-header">
+                    <h2>Featured Lodges</h2>
+                    <p>Explore some of our highly rated locations</p>
+                </div>
+                <div class="lodges-grid" id="featured-lodges-container">
+                    <!-- Dynamic Featured Lodges Loaded Here -->
+                </div>
+                <div class="text-center mt-30">
+                    <button class="btn btn-outline" onclick="navigateTo('lodges-view')">View All Lodges</button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 2. LODGES LISTING VIEW -->
+        <section id="lodges-view" class="view-section hidden">
+            <div class="container page-layout">
+                <!-- Filter Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Filter Lodges</h3>
+                        <button class="btn-clear" onclick="resetFilters()">Clear All</button>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="search-filter"><i class="fa-solid fa-magnifying-glass"></i> Search Location</label>
+                        <input type="text" id="search-filter" placeholder="Enter city or name..." oninput="applyFilters()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="price-filter"><i class="fa-solid fa-indian-rupee-sign"></i> Max Price (per night): <span id="price-val">₹10000</span></label>
+                        <input type="range" id="price-filter" min="1000" max="10000" step="500" value="10000" oninput="updatePriceLabel(this.value)">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="rating-filter"><i class="fa-solid fa-star"></i> Minimum Rating</label>
+                        <select id="rating-filter" onchange="applyFilters()">
+                            <option value="0">All Ratings</option>
+                            <option value="4.5">Excellent (4.5+ ★)</option>
+                            <option value="4.0">Very Good (4.0+ ★)</option>
+                            <option value="3.5">Good (3.5+ ★)</option>
+                        </select>
+                    </div>
+                </aside>
+
+                <!-- Listing Grid Area -->
+                <div class="listing-area">
+                    <div class="listing-header">
+                        <p><span id="results-count">0</span> Lodges Found</p>
+                    </div>
+                    <div class="lodges-grid" id="all-lodges-container">
+                        <!-- Dynamic Lodges List Loaded Here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3. LODGE DETAILS VIEW -->
+        <section id="details-view" class="view-section hidden">
+            <div class="container container-md">
+                <button class="btn-back" onclick="navigateTo('lodges-view')"><i class="fa-solid fa-arrow-left"></i> Back to Listings</button>
+                
+                <div class="details-container" id="details-container">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 4. ABOUT US VIEW -->
+        <section id="about-view" class="view-section hidden">
+            <div class="container container-md text-center py-50">
+                <h2>About CozyStay</h2>
+                <p class="lead-text">Simplifying lodge bookings across the country since 2024.</p>
+                
+                <div class="about-content">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="About Us Banner" class="about-img">
+                    <p class="about-desc">
+                        
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 5. CONTACT US VIEW -->
+        <section id="contact-view" class="view-section hidden">
+            <div class="container container-md py-50">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h2>Get in Touch</h2>
+                        <p>Have questions or facing booking issues? Feel free to contact our technical team.</p>
+                        
+                        <div class="info-item">
+                            <i class="fa-solid fa-envelope"></i>
+                            <div>
+                                <h4>Email Support</h4>
+                                <p>support@cozystay.com</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <div>
+                                <h4>Phone Helpline</h4>
+                                <p>+91 98765 43210</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div>
+                                <h4>Project Lab Address</h4>
+                                <p>CSE Block, Tech University Campus, India</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form-container">
+                        <h3>Send Us a Message</h3>
+                        <form id="contact-form" onsubmit="handleContactSubmit(event)">
+                            <div class="form-group">
+                                <label for="contact-name">Full Name</label>
+                                <input type="text" id="contact-name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email" placeholder="john@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message">Message</label>
+                                <textarea id="contact-message" rows="5" placeholder="Write your message here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 6. USER DASHBOARD VIEW (My Bookings) -->
+        <section id="dashboard-view" class="view-section hidden">
+            <div class="container container-md py-50">
+                <div class="dashboard-header">
+                    <h2>My Dashboard</h2>
+                    <p>Welcome back! Manage and view all your booked lodge trips here.</p>
+                </div>
+                
+                <div class="bookings-list" id="bookings-list-container">
+                    <!-- Dynamic User Booking History Filled Here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: Auth (Login/Register) -->
+    <div class="modal" id="auth-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab-btn" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="example@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign In</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="hidden" onsubmit="handleRegisterSubmit(event)">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email Address</label>
+                    <input type="email" id="register-email" required placeholder="example@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Create Password</label>
+                    <input type="password" id="register-password" required placeholder="Min 6 characters">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Booking Confirmation Popup -->
+    <div class="modal" id="booking-modal">
+        <div class="modal-content success-modal text-center">
+            <div class="success-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h2>Booking Confirmed!</h2>
+            <p id="booking-success-msg">Your room at Cozy Resort is successfully reserved.</p>
+            <div class="booking-summary-box">
+                <p><strong>Stay Duration:</strong> <span id="summary-dates">N/A</span></p>
+                <p><strong>Total Amount:</strong> <span id="summary-price">N/A</span></p>
+                <p class="small-text text-muted">A confirmation receipt has been saved locally to your profile history.</p>
+            </div>
+            <button class="btn btn-primary" onclick="closeBookingModal()">View My Bookings</button>
+        </div>
+    </div>
+
+    <!-- Custom JS Script -->
+    <script src="script.js"></script>
+</body>
+</html>
